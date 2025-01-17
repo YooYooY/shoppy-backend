@@ -4,6 +4,7 @@ import { CreateProductRequest } from './dto/create-product.request';
 
 @Injectable()
 export class ProductsService {
+  
   constructor(private readonly prismaService: PrismaService) {}
   
   createProduct(data: CreateProductRequest, userId: number){
@@ -14,4 +15,9 @@ export class ProductsService {
       }
     })
   }
+    
+  async getProducts(){
+    return this.prismaService.product.findMany()
+  }
+  
 }
