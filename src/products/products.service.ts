@@ -5,18 +5,24 @@ import { CreateProductRequest } from './dto/create-product.request';
 import { join } from 'path';
 import { PRODUCT_IMAGES } from './product-images';
 import { Prisma } from '@prisma/client';
+import { ProductsGateWay } from './products.gateway';
 
 @Injectable()
 export class ProductsService {
-  constructor(private readonly prismaService: PrismaService) {}
+  constructor(
+    private readonly prismaService: PrismaService,
+    private readonly productsGateway: ProductsGateWay,
+  ) {}
 
   createProduct(data: CreateProductRequest, userId: number) {
-    return this.prismaService.product.create({
+    const product = this.prismaService.product.create({
       data: {
         ...data,
         userId,
       },
     });
+    this.productsGateway.handleProductUpdated();
+    return product;
   }
 
   async getProducts(status?: string) {
@@ -47,10 +53,12 @@ export class ProductsService {
   }
 
   async update(productId: number, data: Prisma.ProductUpdateInput) {
-    await this.prismaService.product.update({
-      where: { id: productId },
+    const product = await this.prismaService.product.update({
+      where: { id: +productId },
       data,
     });
+    this.productsGateway.handleProductUpdated();
+    return product;
   }
 
   private async imageExists(productId: number) {

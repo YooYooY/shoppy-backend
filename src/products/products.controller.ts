@@ -7,6 +7,7 @@ import {
   Param,
   ParseFilePipe,
   Post,
+  Put,
   Query,
   UploadedFile,
   UseGuards,
@@ -33,6 +34,15 @@ export class ProductsController {
     @CurrentUser() user: TokenPayload,
   ) {
     return this.productsService.createProduct(body, user.userId);
+  }
+
+  @Put(':productId')
+  @UseGuards(JwtAuthGuard)
+  async updateProduct(
+    @Param('productId') productId: number,
+    @Body() body: CreateProductRequest,
+  ) {
+    return this.productsService.update(productId, body);
   }
 
   @Post(':productId/image')
