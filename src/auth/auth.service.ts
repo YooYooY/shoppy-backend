@@ -23,17 +23,17 @@ export class AuthService {
         ms(this.configService.getOrThrow<string>('JWT_EXPIRATION')),
     );
     const tokenPayload: TokenPayload = {
-      userId: user.id
-    }
+      userId: user.id,
+    };
     const token = this.jwtService.sign(tokenPayload);
-    
-    response.cookie("Authentication", token, {
+
+    response.cookie('Authentication', token, {
       secure: true,
       httpOnly: true,
-      expires
+      expires,
     });
-    
-    return {tokenPayload}
+
+    return { tokenPayload };
   }
 
   async verifyUser(email: string, password: string) {
@@ -47,5 +47,9 @@ export class AuthService {
     } catch (error) {
       throw new UnauthorizedException('Credentials are not valid.');
     }
+  }
+
+  verifyToken(token: string) {
+    return this.jwtService.verify(token);
   }
 }
