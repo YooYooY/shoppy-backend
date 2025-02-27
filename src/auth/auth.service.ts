@@ -4,7 +4,7 @@ import ms from 'ms';
 import { ConfigService } from '@nestjs/config';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@prisma/client';
-import * as bcrypt from 'bcrypt';
+import * as bcrypt from 'bcryptjs';
 import { UsersService } from 'src/users/users.service';
 import { TokenPayload } from './token-payload.interface';
 
